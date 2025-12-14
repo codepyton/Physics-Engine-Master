@@ -2,7 +2,7 @@ Physics Engine Master: A Computational Realization of Discontinuous Hamiltonian 
 
 
 
-1\. Abstract
+## 1\. Abstract
 
 
 
@@ -10,7 +10,7 @@ This compendium elucidates the algorithmic instantiation of a stochastic ensembl
 
 
 
-2\. Nomenclature \& Phase Space Definition
+## 2\. Nomenclature \& Phase Space Definition
 
 
 
@@ -48,7 +48,7 @@ $m\_i \\in \\mathbb{R}^+$: The inertial mass scalar.
 
 
 
-3\. Discretized Equations of Motion
+## 3\. Discretized Equations of Motion
 
 
 
@@ -64,13 +64,13 @@ $$\\begin{aligned} \\forall i \\in \\{1, \\dots, N\\}: \\\\ \\mathbf{v}\_i\[n+1]
 
 
 
-Lemma 3.1 (Symplecticity):
+#### Lemma 3.1 (Symplecticity):
 
 The Jacobian $J\_{\\mathcal{T}}$ of the transformation has a determinant of unity ($\\det(J\_{\\mathcal{T}}) = 1$), implying that the phase-space volume is conserved (Liouville's Theorem is satisfied discretely), unlike in explicit Runge-Kutta methods where energy drift is $\\mathcal{O}(\\Delta t^k)$.
 
 
 
-4\. Collision Manifold Resolution \& Impulse Derivation
+## 4\. Collision Manifold Resolution \& Impulse Derivation
 
 
 
@@ -88,7 +88,7 @@ Upon detection of $\\mathbf{q} \\in \\mathcal{C}\_{ij}$, we invoke an instantane
 
 
 
-4.1. Derivation of the Impulse Tensor $\\mathbf{J}$
+#### 4.1. Derivation of the Impulse Tensor $\\mathbf{J}$
 
 
 
@@ -138,7 +138,7 @@ $$-\\varepsilon (\\mathbf{v}\_{rel} \\cdot \\hat{\\mathbf{n}}) = (\\mathbf{v}\_{
 
 
 
-Theorem 4.1 (Impulse Magnitude):
+#### Theorem 4.1 (Impulse Magnitude):
 
 Solving for $\\lambda$ yields the governing equation for the elastic scattering event:
 
@@ -158,7 +158,7 @@ This impulse $\\mathbf{J}$ is applied strictly when $\\mathbf{v}\_{rel} \\cdot \
 
 
 
-5\. Algorithmic Orthogonalization
+## 5\. Algorithmic Orthogonalization
 
 
 
@@ -183,4 +183,5 @@ scene: Manages the $\\mathcal{O}(N)$ entity list and spatial queries.
 
 
 renderer: Maps $\\mathbb{R}^3 \\to \\mathbb{Z}^2$ via perspective projection matrices $\\mathbf{P}\_{proj}$.
+
 
