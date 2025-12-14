@@ -3,13 +3,23 @@
 
 #include "scene.h"
 
-// Sets up the initial OpenGL state (lighting, depth testing, etc.).
-void renderer_setup();
+// Camera System
+typedef struct {
+    Vec3 pos;
+    float yaw;
+    float pitch;
+    Vec3 front;
+    Vec3 right;
+    Vec3 up;
+} Camera;
 
-// Called when the window is resized. Sets up the projection matrix.
-void renderer_reshape(int width, int height);
+extern Camera g_camera;
 
-// Draws the entire scene.
-void renderer_draw(const Scene* scene);
+void renderer_init();
+void renderer_resize(int w, int h);
+void renderer_render_scene(const Scene* scene);
+void renderer_update_camera_mouse(float x, float y);
+void renderer_update_camera_keyboard(bool* keys, float dt);
+void renderer_debug_octree(struct OctreeNode* node);
 
 #endif // RENDERER_H

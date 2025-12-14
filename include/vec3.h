@@ -1,44 +1,75 @@
 #ifndef VEC3_H
 #define VEC3_H
 
-// Define a structure for a 3D vector.
-// A vector v⃗ ∈ ℝ³ is an object with magnitude and direction, representable
-// as a tuple (x, y, z) corresponding to a standard basis (î, ĵ, k̂).
+#include <math.h>
+#include <stdbool.h>
+
+// --- Constants ---
+#define PI 3.14159265359f
+#define DEG2RAD(x) ((x) * PI / 180.0f)
+#define RAD2DEG(x) ((x) * 180.0f / PI)
+
+// --- Data Structures ---
+
+// v⃗ ∈ ℝ³
 typedef struct {
     float x, y, z;
-    // An additional component for potential 4D operations (e.g., homogeneous coords),
-    // unused in standard 3D physics but useful for alignment.
-    float w;
 } Vec3;
 
-// --- Vector Operations ---
+// q ∈ ℍ (Quaternion for orientation)
+// q = w + xi + yj + zk
+typedef struct {
+    float w, x, y, z;
+} Quat;
 
-// Adds two vectors, a⃗ and b⃗.
-// Vector addition is defined component-wise:
-// c⃗ = a⃗ + b⃗ = (aₓ + bₓ)î + (aᵧ + bᵧ)ĵ + (a₂ + b₂)k̂
-Vec3 vec3_add(Vec3 a, Vec3 b);
+// M ∈ ℝ³ˣ³ (Linear transformations, Inertia tensors)
+typedef struct {
+    float m[3][3];
+} Mat3;
 
-// Subtracts vector b⃗ from a⃗.
-// c⃗ = a⃗ - b⃗ = (aₓ - bₓ)î + (aᵧ - bᵧ)ĵ + (a₂ - b₂)k̂
-Vec3 vec3_sub(Vec3 a, Vec3 b);
+// M ∈ ℝ⁴ˣ⁴ (Affine transformations)
+typedef struct {
+    float m[4][4];
+} Mat4;
 
-// Scales a vector by a scalar value s.
-// s⋅v⃗ = (s⋅vₓ)î + (s⋅vᵧ)ĵ + (s⋅v₂)k̂
-Vec3 vec3_scale(Vec3 v, float s);
+// --- Vector Operations (ℝ³) ---
+Vec3 vec3_zero();
+Vec3 vec3_set(float x, float y, float z);
+Vec3 vec3_add(Vec3 a, Vec3 b);      // a⃗ + b⃗
+Vec3 vec3_sub(Vec3 a, Vec3 b);      // a⃗ - b⃗
+Vec3 vec3_scale(Vec3 v, float s);   // s ⋅ v⃗
+Vec3 vec3_mul(Vec3 a, Vec3 b);      // Component-wise
+float vec3_dot(Vec3 a, Vec3 b);     // ⟨a⃗, b⃗⟩
+Vec3 vec3_cross(Vec3 a, Vec3 b);    // a⃗ ∧ b⃗
+float vec3_mag_sq(Vec3 v);          // ‖v⃗‖²
+float vec3_magnitude(Vec3 v);       // ‖v⃗‖
+float vec3_dist_sq(Vec3 a, Vec3 b); // ‖a⃗ - b⃗‖²
+Vec3 vec3_normalize(Vec3 v);        // v̂
+Vec3 vec3_reflect(Vec3 v, Vec3 n);  // v⃗ - 2(v⃗⋅n̂)n̂
+Vec3 vec3_lerp(Vec3 a, Vec3 b, float t);
 
-// Calculates the dot product of two vectors.
-// Geometric definition: a⃗ ⋅ b⃗ = ‖a⃗‖‖b⃗‖cos(θ)
-// Algebraic definition: a⃗ ⋅ b⃗ = aₓbₓ + aᵧbᵧ + a₂b₂
-float vec3_dot(Vec3 a, Vec3 b);
+// --- Quaternion Operations (ℍ) ---
+Quat quat_identity();
+Quat quat_from_axis_angle(Vec3 axis, float angle);
+Quat quat_mul(Quat a, Quat b);      // q₁ ⊗ q₂
+Quat quat_conjugate(Quat q);        // q*
+Vec3 quat_rotate_vec(Quat q, Vec3 v); // v' = q v q*
+Quat quat_normalize(Quat q);
+Mat3 quat_to_mat3(Quat q);          // R(q)
 
-// Calculates the magnitude (or L2 norm) of a vector.
-// The magnitude ‖v⃗‖ is the vector's length, from the Pythagorean theorem.
-// ‖v⃗‖ = √(vₓ² + vᵧ² + v₂²) = √(v⃗ ⋅ v⃗)
-float vec3_magnitude(Vec3 v);
+// --- Matrix Operations ---
+Mat3 mat3_identity();
+Mat3 mat3_zero();
+Mat3 mat3_mul(Mat3 a, Mat3 b);      // C = AB
+Vec3 mat3_mul_vec(Mat3 m, Vec3 v);  // u⃗ = M v⃗
+Mat3 mat3_transpose(Mat3 m);        // Mᵀ
+Mat3 mat3_inverse(Mat3 m);          // M⁻¹
+float mat3_det(Mat3 m);             // det(M)
 
-// Normalizes a vector to have a magnitude of 1.
-// A normalized vector, or unit vector v̂, is defined as:
-// v̂ = v⃗ / ‖v⃗‖, provided ‖v⃗‖ ≠ 0.
-Vec3 vec3_normalize(Vec3 v);
+Mat4 mat4_identity();
+Mat4 mat4_translate(Vec3 t);
+Mat4 mat4_scale(Vec3 s);
+Mat4 mat4_mul(Mat4 a, Mat4 b);
+Mat4 mat4_from_quat_pos(Quat q, Vec3 p);
 
 #endif // VEC3_H
